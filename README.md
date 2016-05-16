@@ -1,6 +1,6 @@
 # Documentazione RESTful API
 
-Una RESTful API basata su Slim Framework con programmazione exceptions oriented.
+Una RESTful API basata su Slim Framework con programmazione exception driven.
 
 ## Struttura directory:
 
@@ -36,13 +36,13 @@ il risultato dell'operazione effettuata.
 Esempio di `SuccessResponse`:
 
 ```
-{"data":"Operazione eseguita"}
+{"status": "success", data":"Operazione eseguita"}
 ```
 
 Se la chiamata REST è una procedura che non fornisce alcun dato di ritorno, l'oggetto `SuccessResponse` sarà del tipo:
 
 ```
-{"success":true}
+{"status": "success"}
 ```
 
 Una `ErrorResponse`, invece, è sempre accompagnato da un codice di stato `HTTP` di errore tra i seguenti:
@@ -60,7 +60,7 @@ Inoltre, l'oggetto che viene ritornato in caso d'errore non contiene il campo `d
 Esempio di `ErrorResponse`:
 
 ```
-{"error": {"message": "Eccezione", "errorClass": "Exception", "trace": "<STACK TRACE>"}}
+{"status: "error", "error": {"message": "Eccezione", "errorClass": "Exception", "trace": "<STACK TRACE>"}}
 ```
 
 Il campo `trace` è presente soltanto negli errori con codice di risposta `HTTP 500`
