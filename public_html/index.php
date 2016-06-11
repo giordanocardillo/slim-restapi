@@ -27,6 +27,7 @@ $fp = new FluentPDO($db);
 /* Oggetto App Globale */
 $app = new \Slim\Slim();
 
+
 /* Impostazione template di rendering globale a JSON */
 $app->view(new JSONView());
 
@@ -35,9 +36,6 @@ $app->error(function (Exception $e) use ($app) {
 	$app->render(new ErrorResponse($e));
 	$app->stop();
 });
-
-
-
 /* Impostazione not found handling */
 $app->notFound(function () use ($app) {
 	if ($app->request->getMethod() == \Slim\Http\Request::METHOD_OPTIONS) {
