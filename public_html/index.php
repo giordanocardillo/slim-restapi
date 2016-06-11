@@ -36,6 +36,8 @@ $app->error(function (Exception $e) use ($app) {
 	$app->stop();
 });
 
+
+
 /* Impostazione not found handling */
 $app->notFound(function () use ($app) {
 	if ($app->request->getMethod() == \Slim\Http\Request::METHOD_OPTIONS) {
