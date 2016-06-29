@@ -18,7 +18,7 @@ UtilsAutoloader::registerAutoloader();
 ViewsAutoloader::registerAutoloader();
 
 /* Oggetto DB Globale */
-$db = new DBLink();
+$db = new DBLink('db');
 
 /* Oggetto FluentPDO globale */
 $fp = new FluentPDO($db);

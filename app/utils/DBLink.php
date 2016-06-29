@@ -1,19 +1,33 @@
 <?php
 
+class ConnectionDetails {
+
+	public $driver, $host, $dbName, $username, $password;
+
+	public function __construct($driver, $host, $dbName, $username, $password) {
+		$this->driver = $driver;
+		$this->host = $host;
+		$this->dbName = $dbName;
+		$this->username = $username;
+		$this->password = $password;
+	}
+}
+
 class DBLink extends PDO {
 
-	private $db_driver = "mysql";
-	//FIXME Host
-	private $db_host = "";
-	//FIXME DB Name
-	private $db_name = "";
-	//FIXME DB User
-	private $db_username = "";
-	//FIXME Password
-	private $db_passwd = "";
+	private $connections = [];
 
-	public function __construct() {
-		$dsn = "$this->db_driver:host=$this->db_host;dbname=$this->db_name";
-		return parent::__construct($dsn, $this->db_username, $this->db_passwd, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+	public function __construct($connection) {
+
+		$this->connections['db'] = new ConnectionDetails('mysql', '', '', '', '');
+
+		if (!array_key_exists($connection, $this->connections)){
+			throw  new Exception("Database configuration does not exist");
+		}
+
+		$connectionDetails = $this->connections[$connection];
+
+		$dsn = "$connectionDetails->driver:host=$connectionDetails->host;dbname=$connectionDetails->dbName";
+		return parent::__construct($dsn, $connectionDetails->username, $connectionDetails->password, array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
 	}
 }
