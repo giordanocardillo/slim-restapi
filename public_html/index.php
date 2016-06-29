@@ -7,13 +7,12 @@ define("PUBLIC", __DIR__);
 define("IMAGES", __DIR__ . "/images");
 
 /* Inclusione autoloaders */
-require APP . '/vendor/Slim/Slim.php';
+require APP . '/vendor/autoload.php';
 require APP . '/autoloaders/LibsAutoloader.php';
 require APP . '/autoloaders/UtilsAutoloader.php';
 require APP . '/autoloaders/ViewsAutoloader.php';
 
 /* Registrazione autoloaders */
-\Slim\Slim::registerAutoloader();
 LibsAutoloader::registerAutoloader();
 UtilsAutoloader::registerAutoloader();
 ViewsAutoloader::registerAutoloader();
