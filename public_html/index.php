@@ -10,12 +10,10 @@ define("IMAGES", __DIR__ . "/images");
 require __DIR__ . '/../app/vendor/autoload.php';
 require __DIR__ . '/../app/autoloaders/LibsAutoloader.php';
 require __DIR__ . '/../app/autoloaders/UtilsAutoloader.php';
-require __DIR__ . '/../app/autoloaders/ViewsAutoloader.php';
 
 /* Registrazione autoloaders */
 LibsAutoloader::registerAutoloader();
 UtilsAutoloader::registerAutoloader();
-ViewsAutoloader::registerAutoloader();
 
 /* Uses */
 use Slim\Http\Request as SlimRequest;
