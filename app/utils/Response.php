@@ -13,11 +13,15 @@ class Response {
 
 
     public function __construct($data, $status) {
+        if (is_array($data)) {
+            $data = $this->camelCaseKeys($data);
+        }
         if ($status == "error") {
-            $this->error = $this->camelCaseKeys($data);
+
+            $this->error = $data;
         } else {
             if (!empty($data)) {
-                $this->data = $this->camelCaseKeys($data);
+                $this->data = $data;
             }
         }
         $this->status = $status;

@@ -3,10 +3,11 @@ use Slim\Http\Request as SlimRequest;
 use Slim\Http\Response as SlimResponse;
 
 // Check della sessione utente
-$app->get('/session/check', function (SlimRequest $request, SlimResponse $response)  use ($db, $fp) {
+$app->get('/session/check', function (SlimRequest $request, SlimResponse $response) use ($db, $fp) {
     $data = array();
     try {
-        $session_payload = SessionManager::checkSession($request->getHeaders());
+
+        $session_payload = SessionManager::checkSession($request);
         $data['session'] = "valid";
         $data['expiresIn'] = $session_payload->exp - time();
 

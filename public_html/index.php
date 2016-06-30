@@ -20,7 +20,6 @@ use Slim\Http\Request as SlimRequest;
 use Slim\Http\Response as SlimResponse;
 
 /* Oggetto DB Globale */
-
 $db = new DBLink('db');
 
 /* Oggetto FluentPDO globale */
