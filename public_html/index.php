@@ -22,6 +22,7 @@ use Slim\Http\Request as SlimRequest;
 use Slim\Http\Response as SlimResponse;
 
 /* Oggetto DB Globale */
+
 $db = new DBLink('db');
 
 /* Oggetto FluentPDO globale */
@@ -43,7 +44,17 @@ $c['notFoundHandler'] = function ($c) {
         if ($request->getMethod() == "OPTIONS") {
             return $c['response']->withJson(new SuccessResponse());
         }
-        return $c['response']->withJson(new ErrorResponse(new Exception("Not found")), Response::HTTP_NOT_FOUND);
+        return $c['response']->withJson(new ErrorResponse(new Exception("Not found"), Response::HTTP_NOT_FOUND), Response::HTTP_NOT_FOUND);
+    };
+};
+
+/* Impostazione not allowed handling */
+$c['notAllowedHandler'] = function ($c) {
+    return function ($request, $response, $methods) use ($c) {
+        if ($request->getMethod() == "OPTIONS") {
+            return $c['response']->withJson(new SuccessResponse());
+        }
+        return $c['response']->withJson(new ErrorResponse(new Exception("Must be " . implode(', ', $methods)), Response::HTTP_NOT_ALLOWED), Response::HTTP_NOT_ALLOWED);
     };
 };
 
