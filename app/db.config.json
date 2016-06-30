@@ -1,0 +1,23 @@
+{
+  "db1": {
+    "driver": "mysql",
+    "host": "",
+    "dbName": "",
+    "username": "",
+    "password": ""
+  },
+  "db2": {
+    "driver": "mysql",
+    "host": "",
+    "dbName": "",
+    "username": "",
+    "password": ""
+  },
+  "db3": {
+    "driver": "mysql",
+    "host": "",
+    "dbName": "",
+    "username": "",
+    "password": ""
+  }
+}
