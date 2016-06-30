@@ -2,7 +2,7 @@
 
 class UtilsAutoloader {
 
-	public static function autoload($className) {
+	private static function autoload($className) {
 		$ds = DIRECTORY_SEPARATOR;
 		$fileName = __DIR__ . $ds . ".." . $ds . "utils" . $ds . $className . ".php";
 		if (file_exists($fileName)) {

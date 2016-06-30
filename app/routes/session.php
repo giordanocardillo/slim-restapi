@@ -1,14 +1,16 @@
 <?php
+use Slim\Http\Request as SlimRequest;
+use Slim\Http\Response as SlimResponse;
 
 // Check della sessione utente
-$app->get('/session/check', function () use ($app) {
-	$data = array();
-	try {
-		$session_payload = SessionManager::checkSession($app->request->headers);
-		$data['session'] = "valid";
-		$data['expiresIn'] = $session_payload->exp - time();
-		$app->render(new SuccessResponse($data));
-	} catch (Exception $e) {
-		$app->render(new ErrorResponse($e, Response::HTTP_UNATHORIZED));
-	}
+$app->get('/session/check', function (SlimRequest $request, SlimResponse $response) use ($fp) {
+    $data = array();
+    try {
+        $session_payload = SessionManager::checkSession($request->getHeaders());
+        $data['session'] = "valid";
+        $data['expiresIn'] = $session_payload->exp - time();
+        return $response->withJson(new SuccessResponse());
+    } catch (Exception $e) {
+        return $response->withJson(new ErrorResponse($e, Response::HTTP_UNATHORIZED), Response::HTTP_UNATHORIZED);
+    }
 });

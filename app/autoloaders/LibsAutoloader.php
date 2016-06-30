@@ -2,7 +2,7 @@
 
 class LibsAutoloader {
 
-	public static function autoload($className) {
+	private static function autoload($className) {
 		$ds = DIRECTORY_SEPARATOR;
 		if (preg_match("/[a-zA-Z]+Exception$/", $className)) {
 			$fileName = __DIR__ . $ds . ".." . $ds . "lib" . $ds . "Exceptions" . $ds . $className . ".php";

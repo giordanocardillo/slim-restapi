@@ -1,6 +1,6 @@
 {
     "require": {
         "fpdo/fluentpdo": "dev-master",
-        "slim/slim": "2.6.2"
+        "slim/slim": "3.4.2"
     }
 }
