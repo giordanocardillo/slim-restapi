@@ -3,7 +3,7 @@ use Slim\Http\Request as SlimRequest;
 use Slim\Http\Response as SlimResponse;
 
 // Check della sessione utente
-$app->get('/session/check', function (SlimRequest $request, SlimResponse $response) use ($db, $fp) {
+$app->get('/session/check', function (SlimRequest $request, SlimResponse $response) use ($dbs, $fps) {
     $data = array();
     try {
 

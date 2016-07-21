@@ -6,15 +6,13 @@ class SessionManager {
     const SESSION_EXPIRE_MINUTES = 180;
 
     //FIXME Add encryption keys
-    protected static function getSecretKeys() {
-        return array(
-            '',
-            '',
-            '',
-            '',
-            ''
-        );
-    }
+    private static $jwtKeys = [
+        '',
+        '',
+        '',
+        '',
+        ''
+    ];
 
     public static function checkSession(SlimRequest $request) {
 
@@ -23,12 +21,11 @@ class SessionManager {
         }
 
         $token = preg_replace('/^Bearer\\s/', '', $request->getHeader('Authorization')[0]);
-        return JWT::decode($token, self::getSecretKeys(), array('HS256'));
+        return JWT::decode($token, self::$jwtKeys, array('HS256'));
     }
 
     public static function issueToken($userID) {
-        $keys = self::getSecretKeys();
-        $kid = array_rand($keys);
-        return JWT::encode(array('id' => $userID, 'exp' => time() + (self::SESSION_EXPIRE_MINUTES * 60), 'nbf' => time()), $keys[$kid], 'HS256', $kid);
+        $kid = array_rand(self::$jwtKeys);
+        return JWT::encode(array('id' => $userID, 'exp' => time() + (self::SESSION_EXPIRE_MINUTES * 60), 'nbf' => time()), self::$jwtKeys[$kid], 'HS256', $kid);
     }
 }

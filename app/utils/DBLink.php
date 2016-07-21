@@ -1,34 +1,50 @@
 <?php
 
-class ConnectionDetails {
-
-    public $driver, $host, $dbName, $username, $password;
-
-    public function __construct($driver, $host, $dbName, $username, $password) {
-        $this->driver = $driver;
-        $this->host = $host;
-        $this->dbName = $dbName;
-        $this->username = $username;
-        $this->password = $password;
-    }
-}
-
 class DBLink extends PDO {
 
-    private $connections = [];
-
-    public function __construct($connection) {
+    /**
+     * DBLink constructor.
+     * @param $dbName "The connection name"
+     * @throws Exception
+     */
+    public function __construct($dbName) {
 
         // Getting DB configurations
-        $this->connections = json_decode(file_get_contents(APP . "/db.config.json"));
+        if (!file_exists(APP . "/db.config.json")) {
+            throw new Exception("Database configuration file does not exist");
+        }
 
-        if (!isset($this->connections->{$connection})) {
+        $configurations = json_decode(file_get_contents(APP . "/db.config.json"));
+
+        if (!isset($configurations->{$dbName})) {
             throw  new Exception("Database configuration does not exist");
         }
 
-        $connectionDetails = $this->connections->{$connection};
+        $connectionDetails = $configurations->{$dbName};
 
         $dsn = "$connectionDetails->driver:host=$connectionDetails->host;dbname=$connectionDetails->dbName";
         return parent::__construct($dsn, $connectionDetails->username, $connectionDetails->password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+    }
+
+    /**
+     * @return DBLink[]
+     * @throws Exception
+     */
+    public static function connectAll() {
+
+        $pdos = [];
+
+        if (!file_exists(APP . "/db.config.json")) {
+            throw new Exception("Database configuration file does not exist");
+        }
+
+        $configurations = json_decode(file_get_contents(APP . "/db.config.json"), true);
+
+        foreach ($configurations as $db => $connectionDetails) {
+            $pdos[$db] = new DBLink($db);
+        }
+
+        return $pdos;
+
     }
 }

@@ -19,25 +19,36 @@ UtilsAutoloader::registerAutoloader();
 use Slim\Http\Request as SlimRequest;
 use Slim\Http\Response as SlimResponse;
 
-/* Oggetto DB Globale */
-$db = new DBLink('db');
+/* Global DBLink array */
+/** @var DBLink[] $dbs */
+$dbs = DBLink::connectAll();
 
-/* Oggetto FluentPDO globale */
-$fp = new FluentPDO($db);
+/* global FluentPDO array */
+/** @var FluentPDO[] $fps */
+$fps = [];
+
+foreach ($dbs as $connection => $link) {
+    if (!is_a($link, 'DBLink')) {
+        throw new BadFunctionCallException("Need only DBLink connections");
+    }
+    $fps->{$connection} = new FluentPDO($link);
+}
 
 /* Container Slim */
 $c = new \Slim\Container();
 
 /* Impostazione error handling */
 $c['errorHandler'] = function ($c) {
-    return function ($request, $response, $exception) use ($c) {
+    return function (SlimRequest $request, SlimResponse $response, $exception) use ($c) {
+        /** @var \Slim\Container $c */
         return $c['response']->withJson(new ErrorResponse($exception));
     };
 };
 
 /* Impostazione not found handling */
 $c['notFoundHandler'] = function ($c) {
-    return function ($request, $response) use ($c) {
+    return function (SlimRequest $request, SlimResponse $response) use ($c) {
+        /** @var \Slim\Container $c */
         if ($request->getMethod() == "OPTIONS") {
             return $c['response']->withJson(new SuccessResponse());
         }
@@ -47,7 +58,8 @@ $c['notFoundHandler'] = function ($c) {
 
 /* Impostazione not allowed handling */
 $c['notAllowedHandler'] = function ($c) {
-    return function ($request, $response, $methods) use ($c) {
+    return function (SlimRequest $request, SlimResponse $response, $methods) use ($c) {
+        /** @var \Slim\Container $c */
         if ($request->getMethod() == "OPTIONS") {
             return $c['response']->withJson(new SuccessResponse());
         }
@@ -55,13 +67,15 @@ $c['notAllowedHandler'] = function ($c) {
     };
 };
 
-/* Oggetto App Globale */
+/* Global app object */
 $app = new \Slim\App($c);
 
-/* Qui vengono inseriti tutti i require delle routes */
-require ROUTES . "/session.php";
+/* Routes requires */
+foreach (glob(ROUTES . "/*.php") as $file) {
+    require $file;
+}
 
-/* Route di default che mostra una pagina statica */
+/* Default route */
 $app->get("/", function (SlimRequest $request, SlimResponse $response) {
     $html = <<<HTML
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
@@ -117,9 +131,7 @@ $app->get("/", function (SlimRequest $request, SlimResponse $response) {
 </body>
 </html>
 HTML;
-
     return $response->getBody()->write($html);
-
 });
 
 $app->run();
