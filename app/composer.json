@@ -1,8 +1,7 @@
 {
   "autoload": {
     "prs-4": {
-      "RestAPI\\": "/app/src",
-      "RestAPI\\Routes\\": "/app/routes"
+      "RestAPI\\": "/app/libs"
     }
   },
   "require": {

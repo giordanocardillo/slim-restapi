@@ -1,14 +1,11 @@
 <?php
 
-namespace RestAPI\Routes;
-
-use Exception;
 use RestAPI\Utils\ErrorResponse;
 use RestAPI\Utils\Response;
 use RestAPI\Utils\SuccessResponse;
-use SessionManager;
 use Slim\Http\Request as SlimRequest;
 use Slim\Http\Response as SlimResponse;
+
 
 // Check della sessione utente
 $app->get('/session/check', function (SlimRequest $request, SlimResponse $response) use ($dbs, $fps) {
@@ -21,7 +18,9 @@ $app->get('/session/check', function (SlimRequest $request, SlimResponse $respon
 
     return $response->withJson(new SuccessResponse($data));
 
-  } catch (Exception $e) {
+  } catch
+  (Exception $e) {
     return $response->withJson(new ErrorResponse($e, Response::HTTP_UNATHORIZED), Response::HTTP_UNATHORIZED);
   }
 });
+
