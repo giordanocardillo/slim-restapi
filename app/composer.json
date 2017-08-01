@@ -1,12 +1,13 @@
 {
   "autoload": {
-    "prs-4": {
-      "RestAPI\\": "/app/libs"
+    "psr-4": {
+      "RestAPI\\": "RestAPI"
     }
   },
   "require": {
     "slim/slim": "3.4.2",
     "fpdo/fluentpdo": "dev-master",
-    "firebase/php-jwt": "2.0.0"
+    "firebase/php-jwt": "2.0.0",
+    "monolog/monolog": "^1.23"
   }
 }

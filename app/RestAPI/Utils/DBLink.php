@@ -2,6 +2,7 @@
 
 namespace RestAPI\Utils;
 
+use FluentPDO;
 use PDO;
 use Exception;
 
@@ -28,7 +29,9 @@ class DBLink extends PDO {
     $connectionDetails = $configurations->{$dbName};
 
     $dsn = "$connectionDetails->driver:host=$connectionDetails->host;dbname=$connectionDetails->dbName";
-    return parent::__construct($dsn, $connectionDetails->username, $connectionDetails->password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+    $pdo = parent::__construct($dsn, $connectionDetails->username, $connectionDetails->password, [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+    $pdo->fluent = new FluentPDO($pdo);
+    return $pdo;
   }
 
   /**
@@ -37,7 +40,7 @@ class DBLink extends PDO {
    */
   public static function connectAll() {
 
-    $pdos = [];
+    $connections = [];
 
     if (!file_exists(APP . "/db.config.json")) {
       throw new Exception("Database configuration file does not exist");
@@ -46,10 +49,9 @@ class DBLink extends PDO {
     $configurations = json_decode(file_get_contents(APP . "/db.config.json"), true);
 
     foreach ($configurations as $db => $connectionDetails) {
-      $pdos[$db] = new DBLink($db);
+      $connections[$db] = new DBLink($db);
     }
 
-    return $pdos;
-
+    return $connections;
   }
 }

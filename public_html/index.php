@@ -9,8 +9,18 @@ define("IMAGES", __DIR__ . "/images");
 /* Include autoloader */
 require APP . '/vendor/autoload.php';
 
+
+/* configure debug settings */
+define("DEBUG", true);
+define("DEBUG_LEVEL", Monolog\Logger::DEBUG);
+define("DEBUG_LOG_FILE", APP . "/app.log");
+
+
 /* Uses */
 
+use RestAPI\Exceptions\APINotFoundException;
+use RestAPI\Exceptions\MethodNotAllowedException;
+use RestAPI\Utils\APIResponse;
 use RestAPI\Utils\DBLink;
 use RestAPI\Utils\ErrorResponse;
 use RestAPI\Utils\HttpCodes;
@@ -18,29 +28,19 @@ use RestAPI\Utils\SuccessResponse;
 use Slim\Http\Request as SlimRequest;
 use Slim\Http\Response as SlimResponse;
 
-/* Global DBLink array */
-/** @var DBLink[] $dbs */
-$dbs = DBLink::connectAll();
 
-/* global FluentPDO array */
-/** @var FluentPDO[] $fps */
-$fps = [];
-
-foreach ($dbs as $connection => $link) {
-  if (!is_a($link, 'DBLink')) {
-    throw new BadFunctionCallException("Need only DBLink connections");
-  }
-  $fps->{$connection} = new FluentPDO($link);
-}
+/* Global app object */
+$app = new \Slim\App();
 
 /* Slim container */
-$c = new \Slim\Container();
+$c = $app->getContainer();
+
 
 /* Setting error handling */
 $c['errorHandler'] = function ($c) {
   return function (SlimRequest $request, SlimResponse $response, $exception) use ($c) {
     /** @var \Slim\Container $c */
-    return new ErrorResponse($c['response'], $exception);
+    return APIResponse::withError($c['response'], $exception);
   };
 };
 
@@ -49,9 +49,9 @@ $c['notFoundHandler'] = function ($c) {
   return function (SlimRequest $request, SlimResponse $response) use ($c) {
     /** @var \Slim\Container $c */
     if ($request->getMethod() == "OPTIONS") {
-      return new SuccessResponse($c['response']);
+      return APIResponse::withSuccess($c['response']);
     }
-    return new ErrorResponse($c['response'], new Exception("Not found"), HttpCodes::NOT_FOUND);
+    return APIResponse::withError($c['response'], new APINotFoundException("API not found"), HttpCodes::NOT_FOUND);
   };
 };
 
@@ -60,14 +60,32 @@ $c['notAllowedHandler'] = function ($c) {
   return function (SlimRequest $request, SlimResponse $response, $methods) use ($c) {
     /** @var \Slim\Container $c */
     if ($request->getMethod() == "OPTIONS") {
-      return new SuccessResponse($c['response']);
+      return APIResponse::withSuccess($c['response']);
     }
-    return new ErrorResponse($c['response'], new Exception("Must be " . implode(', ', $methods)), HttpCodes::METHOD_NOT_ALLOWED);
+    $newResponse = $c['response']->withHeader('Allow', implode(', ', $methods));
+    return APIResponse::withError($newResponse, new MethodNotAllowedException("Allowed methods: " . implode(', ', $methods)), HttpCodes::METHOD_NOT_ALLOWED);
   };
 };
 
-/* Global app object */
-$app = new \Slim\App($c);
+/* Database connection */
+$DB = [];
+//$DB = DBLink::connectAll();
+
+/* Debug setting */
+if (DEBUG) {
+  $settings = $c->get('settings');
+  $settings->replace([
+    'displayErrorDetails' => true,
+    'debug' => true,
+    'logger' => function ($c) {
+      $logger = new \Monolog\Logger('RestAPI');
+      $fileHandler = new \Monolog\Handler\StreamHandler(DEBUG_LOG_FILE, DEBUG_LEVEL);
+      $logger->pushHandler($fileHandler);
+      return $logger;
+    }
+  ]);
+}
+
 
 /* Routes requires */
 foreach (glob(ROUTES . "/*.php") as $file) {

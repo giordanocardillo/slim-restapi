@@ -8,14 +8,13 @@ use Slim\Http\Response as SlimResponse;
 
 
 // User session check
-
-$app->get('/session/check', function (SlimRequest $request, SlimResponse $response) use ($dbs, $fps) {
-  $data = array();
+$app->get('/session/check', function (SlimRequest $request, SlimResponse $response)/* use ($DB)*/ {
+  $data = [];
   try {
 
-    $session_payload = SessionManager::checkSession($request);
+    $sessionPayload = SessionManager::checkSession($request);
     $data['session'] = "valid";
-    $data['expiresIn'] = $session_payload->exp - time();
+    $data['expiresIn'] = $sessionPayload->exp - time();
 
     return new SuccessResponse($response, $data);
 
