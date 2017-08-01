@@ -15,7 +15,7 @@ class Validation {
 
   public static function isValidGender($gender) {
 
-    if ($gender != "male" and $gender != "fermale") {
+    if ($gender != "male" and $gender != "female") {
       throw new FormatException("Invalid gender");
     }
   }
