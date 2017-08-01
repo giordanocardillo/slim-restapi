@@ -13,7 +13,7 @@ require APP . '/vendor/autoload.php';
 
 use RestAPI\Utils\DBLink;
 use RestAPI\Utils\ErrorResponse;
-use RestAPI\Utils\Response;
+use RestAPI\Utils\HttpCodes;
 use RestAPI\Utils\SuccessResponse;
 use Slim\Http\Request as SlimRequest;
 use Slim\Http\Response as SlimResponse;
@@ -40,7 +40,7 @@ $c = new \Slim\Container();
 $c['errorHandler'] = function ($c) {
   return function (SlimRequest $request, SlimResponse $response, $exception) use ($c) {
     /** @var \Slim\Container $c */
-    return $c['response']->withJson(new ErrorResponse($exception));
+    return new ErrorResponse($c['response'], $exception);
   };
 };
 
@@ -49,9 +49,9 @@ $c['notFoundHandler'] = function ($c) {
   return function (SlimRequest $request, SlimResponse $response) use ($c) {
     /** @var \Slim\Container $c */
     if ($request->getMethod() == "OPTIONS") {
-      return $c['response']->withJson(new SuccessResponse());
+      return new SuccessResponse($c['response']);
     }
-    return $c['response']->withJson(new ErrorResponse(new Exception("Not found"), Response::HTTP_NOT_FOUND), Response::HTTP_NOT_FOUND);
+    return new ErrorResponse($c['response'], new Exception("Not found"), HttpCodes::NOT_FOUND);
   };
 };
 
@@ -60,9 +60,9 @@ $c['notAllowedHandler'] = function ($c) {
   return function (SlimRequest $request, SlimResponse $response, $methods) use ($c) {
     /** @var \Slim\Container $c */
     if ($request->getMethod() == "OPTIONS") {
-      return $c['response']->withJson(new SuccessResponse());
+      return new SuccessResponse($c['response']);
     }
-    return $c['response']->withJson(new ErrorResponse(new Exception("Must be " . implode(', ', $methods)), Response::HTTP_NOT_ALLOWED), Response::HTTP_NOT_ALLOWED);
+    return new ErrorResponse($c['response'], new Exception("Must be " . implode(', ', $methods)), HttpCodes::METHOD_NOT_ALLOWED);
   };
 };
 
@@ -71,7 +71,7 @@ $app = new \Slim\App($c);
 
 /* Routes requires */
 foreach (glob(ROUTES . "/*.php") as $file) {
-  require $file;
+  require_once $file;
 }
 
 /* Default route */

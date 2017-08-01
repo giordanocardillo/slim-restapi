@@ -3,26 +3,27 @@
 namespace RestAPI\Utils;
 
 use Exception;
+use \Slim\Http\Response as SlimResponse;
 
-class ErrorResponse extends Response {
+class ErrorResponse {
 
-  public function __construct(Exception $exception, $status_code = Response::HTTP_INTERNAL_SERVER_ERROR, $debug = NULL) {
+  public function __construct(SlimResponse $response, Exception $exception, $statusCode = HttpCodes::INTERNAL_SERVER_ERROR, $debug = NULL) {
 
-    switch ($status_code) {
-      case Response::HTTP_BAD_REQUEST:
+    switch ($statusCode) {
+      case HttpCodes::BAD_REQUEST:
         break;
-      case Response::HTTP_UNATHORIZED:
+      case HttpCodes::UNATHORIZED:
         break;
-      case Response::HTTP_FORBIDDEN:
+      case HttpCodes::FORBIDDEN:
         break;
-      case Response::HTTP_NOT_FOUND:
+      case HttpCodes::NOT_FOUND:
         break;
-      case Response::HTTP_INTERNAL_SERVER_ERROR:
+      case HttpCodes::INTERNAL_SERVER_ERROR:
         break;
-      case Response::HTTP_NOT_ALLOWED:
+      case HttpCodes::METHOD_NOT_ALLOWED:
         break;
       default:
-        $status_code = Response::HTTP_INTERNAL_SERVER_ERROR;
+        $statusCode = HttpCodes::INTERNAL_SERVER_ERROR;
         break;
 
     }
@@ -32,7 +33,7 @@ class ErrorResponse extends Response {
       "errorClass" => get_class($exception)
     ];
 
-    if ($status_code == Response::HTTP_INTERNAL_SERVER_ERROR) {
+    if ($statusCode == HttpCodes::INTERNAL_SERVER_ERROR) {
       $data['trace'] = $exception->getTraceAsString();
     }
 
@@ -40,8 +41,7 @@ class ErrorResponse extends Response {
       $data['debug'] = var_export($debug, true);
     }
 
-    return parent::__construct($data, "error");
-
+    return $response->withJson($data, $statusCode);
   }
 
 }

@@ -1,13 +1,14 @@
 <?php
 
 use RestAPI\Utils\ErrorResponse;
-use RestAPI\Utils\Response;
+use RestAPI\Utils\HttpCodes;
 use RestAPI\Utils\SuccessResponse;
 use Slim\Http\Request as SlimRequest;
 use Slim\Http\Response as SlimResponse;
 
 
-// Check della sessione utente
+// User session check
+
 $app->get('/session/check', function (SlimRequest $request, SlimResponse $response) use ($dbs, $fps) {
   $data = array();
   try {
@@ -16,11 +17,10 @@ $app->get('/session/check', function (SlimRequest $request, SlimResponse $respon
     $data['session'] = "valid";
     $data['expiresIn'] = $session_payload->exp - time();
 
-    return $response->withJson(new SuccessResponse($data));
+    return new SuccessResponse($response, $data);
 
-  } catch
-  (Exception $e) {
-    return $response->withJson(new ErrorResponse($e, Response::HTTP_UNATHORIZED), Response::HTTP_UNATHORIZED);
+  } catch (Exception $e) {
+    return new ErrorResponse($response, $e, HttpCodes::UNATHORIZED);
   }
 });
 
