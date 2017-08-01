@@ -1,21 +1,20 @@
 <?php
 
-/* Cartelle di progetto*/
+/* Global project folders */
 define("APP", __DIR__ . '/../app');
 define("ROUTES", __DIR__ . '/../app/routes');
 define("PUBLIC", __DIR__);
 define("IMAGES", __DIR__ . "/images");
 
-/* Inclusione autoloaders */
-require __DIR__ . '/../app/vendor/autoload.php';
-require __DIR__ . '/../app/autoloaders/LibsAutoloader.php';
-require __DIR__ . '/../app/autoloaders/UtilsAutoloader.php';
-
-/* Registrazione autoloaders */
-LibsAutoloader::registerAutoloader();
-UtilsAutoloader::registerAutoloader();
+/* Include autoloader */
+require APP . '/vendor/autoload.php';
 
 /* Uses */
+
+use RestAPI\Utils\DBLink;
+use RestAPI\Utils\ErrorResponse;
+use RestAPI\Utils\Response;
+use RestAPI\Utils\SuccessResponse;
 use Slim\Http\Request as SlimRequest;
 use Slim\Http\Response as SlimResponse;
 
@@ -28,43 +27,43 @@ $dbs = DBLink::connectAll();
 $fps = [];
 
 foreach ($dbs as $connection => $link) {
-    if (!is_a($link, 'DBLink')) {
-        throw new BadFunctionCallException("Need only DBLink connections");
-    }
-    $fps->{$connection} = new FluentPDO($link);
+  if (!is_a($link, 'DBLink')) {
+    throw new BadFunctionCallException("Need only DBLink connections");
+  }
+  $fps->{$connection} = new FluentPDO($link);
 }
 
-/* Container Slim */
+/* Slim container */
 $c = new \Slim\Container();
 
-/* Impostazione error handling */
+/* Setting error handling */
 $c['errorHandler'] = function ($c) {
-    return function (SlimRequest $request, SlimResponse $response, $exception) use ($c) {
-        /** @var \Slim\Container $c */
-        return $c['response']->withJson(new ErrorResponse($exception));
-    };
+  return function (SlimRequest $request, SlimResponse $response, $exception) use ($c) {
+    /** @var \Slim\Container $c */
+    return $c['response']->withJson(new ErrorResponse($exception));
+  };
 };
 
-/* Impostazione not found handling */
+/* Setting not found handling */
 $c['notFoundHandler'] = function ($c) {
-    return function (SlimRequest $request, SlimResponse $response) use ($c) {
-        /** @var \Slim\Container $c */
-        if ($request->getMethod() == "OPTIONS") {
-            return $c['response']->withJson(new SuccessResponse());
-        }
-        return $c['response']->withJson(new ErrorResponse(new Exception("Not found"), Response::HTTP_NOT_FOUND), Response::HTTP_NOT_FOUND);
-    };
+  return function (SlimRequest $request, SlimResponse $response) use ($c) {
+    /** @var \Slim\Container $c */
+    if ($request->getMethod() == "OPTIONS") {
+      return $c['response']->withJson(new SuccessResponse());
+    }
+    return $c['response']->withJson(new ErrorResponse(new Exception("Not found"), Response::HTTP_NOT_FOUND), Response::HTTP_NOT_FOUND);
+  };
 };
 
-/* Impostazione not allowed handling */
+/* Setting not allowed handling */
 $c['notAllowedHandler'] = function ($c) {
-    return function (SlimRequest $request, SlimResponse $response, $methods) use ($c) {
-        /** @var \Slim\Container $c */
-        if ($request->getMethod() == "OPTIONS") {
-            return $c['response']->withJson(new SuccessResponse());
-        }
-        return $c['response']->withJson(new ErrorResponse(new Exception("Must be " . implode(', ', $methods)), Response::HTTP_NOT_ALLOWED), Response::HTTP_NOT_ALLOWED);
-    };
+  return function (SlimRequest $request, SlimResponse $response, $methods) use ($c) {
+    /** @var \Slim\Container $c */
+    if ($request->getMethod() == "OPTIONS") {
+      return $c['response']->withJson(new SuccessResponse());
+    }
+    return $c['response']->withJson(new ErrorResponse(new Exception("Must be " . implode(', ', $methods)), Response::HTTP_NOT_ALLOWED), Response::HTTP_NOT_ALLOWED);
+  };
 };
 
 /* Global app object */
@@ -72,12 +71,12 @@ $app = new \Slim\App($c);
 
 /* Routes requires */
 foreach (glob(ROUTES . "/*.php") as $file) {
-    require $file;
+  require $file;
 }
 
 /* Default route */
 $app->get("/", function (SlimRequest $request, SlimResponse $response) {
-    $html = <<<HTML
+  $html = <<<HTML
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -131,7 +130,7 @@ $app->get("/", function (SlimRequest $request, SlimResponse $response) {
 </body>
 </html>
 HTML;
-    return $response->getBody()->write($html);
+  return $response->getBody()->write($html);
 });
 
 $app->run();
