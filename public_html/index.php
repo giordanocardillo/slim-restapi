@@ -35,6 +35,20 @@ $app = new \Slim\App();
 /* Slim container */
 $c = $app->getContainer();
 
+/* Debug setting */
+if (DEBUG) {
+  $settings = $c->get('settings');
+  $settings->replace([
+    'displayErrorDetails' => true,
+    'debug' => true,
+    'logger' => function () {
+      $logger = new \Monolog\Logger('RestAPI');
+      $fileHandler = new \Monolog\Handler\StreamHandler(DEBUG_LOG_FILE, DEBUG_LEVEL);
+      $logger->pushHandler($fileHandler);
+      return $logger;
+    }
+  ]);
+}
 
 /* Setting error handling */
 $c['errorHandler'] = function ($c) {
@@ -51,6 +65,8 @@ $c['notFoundHandler'] = function ($c) {
     if ($request->getMethod() == "OPTIONS") {
       return APIResponse::withSuccess($c['response']);
     }
+    $c->get('settings')['logger']()->addInfo('ss');
+
     return APIResponse::withError($c['response'], new APINotFoundException("API not found"), HttpCodes::NOT_FOUND);
   };
 };
@@ -70,21 +86,6 @@ $c['notAllowedHandler'] = function ($c) {
 /* Database connection */
 $DB = [];
 //$DB = DBLink::connectAll();
-
-/* Debug setting */
-if (DEBUG) {
-  $settings = $c->get('settings');
-  $settings->replace([
-    'displayErrorDetails' => true,
-    'debug' => true,
-    'logger' => function ($c) {
-      $logger = new \Monolog\Logger('RestAPI');
-      $fileHandler = new \Monolog\Handler\StreamHandler(DEBUG_LOG_FILE, DEBUG_LEVEL);
-      $logger->pushHandler($fileHandler);
-      return $logger;
-    }
-  ]);
-}
 
 
 /* Routes requires */
