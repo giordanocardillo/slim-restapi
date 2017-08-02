@@ -2,7 +2,8 @@
 
 namespace RestAPI\Utils;
 
-use JWT;
+
+use Firebase\JWT\JWT;
 use Slim\Http\Request as SlimRequest;
 use RestAPI\Exceptions\UnauthorizedException;
 
