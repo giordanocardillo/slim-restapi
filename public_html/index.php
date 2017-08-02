@@ -103,3 +103,4 @@ foreach (glob(ROUTES . "/*.php") as $file) {
 }
 
 $app->run();
+
