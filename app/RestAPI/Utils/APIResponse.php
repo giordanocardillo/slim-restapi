@@ -32,11 +32,11 @@ class APIResponse {
       "errorClass" => get_class($exception)
     ];
 
-    if ($status == HttpCodes::INTERNAL_SERVER_ERROR && (defined(DEBUG) && DEBUG)) {
+    if ($status == HttpCodes::INTERNAL_SERVER_ERROR && (defined('DEBUG') && DEBUG)) {
       $data['trace'] = $exception->getTraceAsString();
     }
 
-    if (isset($debug) && (defined(DEBUG) && DEBUG)) {
+    if (isset($debug) && (defined('DEBUG') && DEBUG)) {
       $data['debug'] = var_export($debug, true);
     }
 

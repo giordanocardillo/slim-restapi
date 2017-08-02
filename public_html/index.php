@@ -22,11 +22,11 @@ require APP . '/vendor/autoload.php';
 /* Global Configuration */
 define("APP_NAME", "RestAPI");
 define("USE_DB", false);
+define("USE_LOG", true);
+define("LOG_LEVEL", Monolog\Logger::DEBUG);
+define("LOG_FILE", LOGS . "/" . APP_NAME . ".log");
+define("DEBUG", false);
 
-/* Debug configuration */
-define("DEBUG", true);
-define("DEBUG_LEVEL", Monolog\Logger::DEBUG);
-define("DEBUG_LOG_FILE", LOGS . "/" . APP_NAME . ".log");
 
 /* Global app object */
 $app = new \Slim\App();
@@ -43,8 +43,8 @@ $settings->replace([
 
 $c['logger'] = function ($c) {
   $logger = new \Monolog\Logger(APP_NAME);
-  if (DEBUG) {
-    $fileHandler = new \Monolog\Handler\RotatingFileHandler(DEBUG_LOG_FILE, 2, DEBUG_LEVEL);
+  if (USE_LOG) {
+    $fileHandler = new \Monolog\Handler\RotatingFileHandler(LOG_FILE, 2, LOG_LEVEL);
     $fileHandler->setFormatter(new LineFormatter("[%datetime%] %channel%.%level_name%: %message% %context%\n"));
     $logger->pushHandler($fileHandler);
   } else {
