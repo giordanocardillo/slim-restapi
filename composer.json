@@ -1,7 +1,7 @@
 {
   "autoload": {
     "psr-4": {
-      "RestAPI\\": "RestAPI"
+      "RestAPI\\": "app/RestAPI"
     }
   },
   "require": {

@@ -15,11 +15,11 @@ class DBLink extends PDO {
   public function __construct($dbName) {
 
     // Getting DB configurations
-    if (!file_exists(APP . "/db.config.json")) {
+    if (!file_exists(APP_DIR . "/db.config.json")) {
       throw new Exception("Database configuration file does not exist");
     }
 
-    $configurations = json_decode(file_get_contents(APP . "/db.config.json"));
+    $configurations = json_decode(file_get_contents(APP_DIR . "/db.config.json"));
 
     if (!isset($configurations->{$dbName})) {
       throw  new Exception("Database configuration does not exist");
@@ -40,11 +40,11 @@ class DBLink extends PDO {
 
     $connections = [];
 
-    if (!file_exists(APP . "/db.config.json")) {
+    if (!file_exists(APP_DIR . "/db.config.json")) {
       throw new Exception("Database configuration file does not exist");
     }
 
-    $configurations = json_decode(file_get_contents(APP . "/db.config.json"), true);
+    $configurations = json_decode(file_get_contents(APP_DIR . "/db.config.json"), true);
 
     foreach ($configurations as $db => $connectionDetails) {
       $dsn = "$connectionDetails->driver:host=$connectionDetails->host;dbname=$connectionDetails->dbName";

@@ -7,7 +7,37 @@ use \Slim\Http\Response as SlimResponse;
 
 class APIResponse {
 
-  public static function withError(SlimResponse $response, Exception $exception, $status = HttpCodes::INTERNAL_SERVER_ERROR, $debug = null) {
+  public static function withError(SlimResponse $response, Exception $exception, $status = null, $debug = null) {
+
+    if (!self::isValidErrorCode($status)) {
+      if (self::isValidErrorCode($exception->getCode())) {
+        $status = $exception->getCode();
+      }
+    }
+
+    if ($status == null) {
+      $status = HttpCodes::INTERNAL_SERVER_ERROR;
+    }
+
+    $data = [
+      "error" => $exception->getMessage()
+    ];
+
+    if ($status == HttpCodes::INTERNAL_SERVER_ERROR && (defined('DEBUG') && DEBUG)) {
+      $data['trace'] = $exception->getTraceAsString();
+    }
+
+    if (isset($debug) && (defined('DEBUG') && DEBUG)) {
+      $data['debug'] = var_export($debug, true);
+    }
+
+    return $response->withJson($data, $status);
+
+  }
+
+  private static function isValidErrorCode($status) {
+
+    $valid = true;
 
     switch ($status) {
       case HttpCodes::BAD_REQUEST:
@@ -23,24 +53,11 @@ class APIResponse {
       case HttpCodes::METHOD_NOT_ALLOWED:
         break;
       default:
-        $status = HttpCodes::INTERNAL_SERVER_ERROR;
+        $valid = false;
         break;
     }
 
-    $data = [
-      "error" => $exception->getMessage(),
-      "errorClass" => get_class($exception)
-    ];
-
-    if ($status == HttpCodes::INTERNAL_SERVER_ERROR && (defined('DEBUG') && DEBUG)) {
-      $data['trace'] = $exception->getTraceAsString();
-    }
-
-    if (isset($debug) && (defined('DEBUG') && DEBUG)) {
-      $data['debug'] = var_export($debug, true);
-    }
-
-    return $response->withJson($data, $status);
+    return $valid;
 
   }
 

@@ -10,23 +10,26 @@ use Slim\Http\Request as SlimRequest;
 use Slim\Http\Response as SlimResponse;
 
 /* Global project folders */
-define("APP", __DIR__ . '/../app');
-define("ROUTES", __DIR__ . '/../app/routes');
-define("LOGS", __DIR__ . '/../app/logs');
-define("PUBLIC", __DIR__);
-define("IMAGES", __DIR__ . "/images");
+define("APP_DIR", __DIR__ . '/../app');
+define("ROUTES_DIR", __DIR__ . '/../app/routes');
+define("LOGS_DIR", __DIR__ . '/../app/logs');
+define("PUBLIC_DIR", __DIR__);
+define("IMAGES_DIR", __DIR__ . "/images");
 
 /* Include autoloader */
-require APP . '/vendor/autoload.php';
+require __DIR__ . '/../vendor/autoload.php';
+
+/* --- CONFIGURE HERE! --- */
 
 /* Global Configuration */
 define("APP_NAME", "RestAPI");
-define("USE_DB", false);
+define("USE_DB", false); //If using DB, configure it in db.config.json
 define("USE_LOG", true);
 define("LOG_LEVEL", Monolog\Logger::DEBUG);
-define("LOG_FILE", LOGS . "/" . APP_NAME . ".log");
+define("LOG_FILE_NAME", APP_NAME . ".log");
 define("DEBUG", false);
 
+/* --- CONFIGURATION END  --- */
 
 /* Global app object */
 $app = new \Slim\App();
@@ -44,7 +47,7 @@ $settings->replace([
 $c['logger'] = function ($c) {
   $logger = new \Monolog\Logger(APP_NAME);
   if (USE_LOG) {
-    $fileHandler = new \Monolog\Handler\RotatingFileHandler(LOG_FILE, 2, LOG_LEVEL);
+    $fileHandler = new \Monolog\Handler\RotatingFileHandler(LOGS_DIR . "/" . LOG_FILE_NAME, 2, LOG_LEVEL);
     $fileHandler->setFormatter(new LineFormatter("[%datetime%] %channel%.%level_name%: %message% %context%\n"));
     $logger->pushHandler($fileHandler);
   } else {
@@ -98,7 +101,7 @@ if (USE_DB) {
 }
 
 /* Routes requires */
-foreach (glob(ROUTES . "/*.php") as $file) {
+foreach (glob(ROUTES_DIR . "/*.php") as $file) {
   require_once $file;
 }
 
