@@ -32,7 +32,7 @@ class APIResponse {
       "errorClass" => get_class($exception)
     ];
 
-    if ($status == HttpCodes::INTERNAL_SERVER_ERROR) {
+    if ($status == HttpCodes::INTERNAL_SERVER_ERROR && (defined(DEBUG) && DEBUG)) {
       $data['trace'] = $exception->getTraceAsString();
     }
 
