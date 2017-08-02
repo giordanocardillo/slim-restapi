@@ -1,8 +1,9 @@
 <?php
 
-use RestAPI\Utils\ErrorResponse;
+use RestAPI\Utils\APIResponse;
+
 use RestAPI\Utils\HttpCodes;
-use RestAPI\Utils\SuccessResponse;
+
 use Slim\Http\Request as SlimRequest;
 use Slim\Http\Response as SlimResponse;
 
@@ -16,10 +17,10 @@ $app->get('/session/check', function (SlimRequest $request, SlimResponse $respon
     $data['session'] = "valid";
     $data['expiresIn'] = $sessionPayload->exp - time();
 
-    return new SuccessResponse($response, $data);
+    return APIResponse::withSuccess($response, $data);
 
   } catch (Exception $e) {
-    return new ErrorResponse($response, $e, HttpCodes::UNATHORIZED);
+    return APIResponse::witherror($response, $e, HttpCodes::UNATHORIZED);
   }
 });
 
