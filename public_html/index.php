@@ -4,6 +4,7 @@ use Monolog\Formatter\LineFormatter;
 use RestAPI\Exceptions\APINotFoundException;
 use RestAPI\Exceptions\MethodNotAllowedException;
 use RestAPI\Utils\APIResponse;
+use RestAPI\Utils\ConfigurationManager;
 use RestAPI\Utils\DBLink;
 use RestAPI\Utils\HttpCodes;
 use Slim\Http\Request as SlimRequest;
@@ -19,17 +20,18 @@ define("IMAGES_DIR", __DIR__ . "/images");
 /* Include autoloader */
 require __DIR__ . '/../vendor/autoload.php';
 
-/* --- CONFIGURE HERE! --- */
-
 /* Global Configuration */
-define("APP_NAME", "RestAPI");
-define("USE_DB", false); //If using DB, configure it in db.config.json
-define("USE_LOG", true);
-define("LOG_LEVEL", Monolog\Logger::DEBUG);
+define("APP_NAME", ConfigurationManager::getInstance()->getApp()->name);
+define("USE_DB", ConfigurationManager::getInstance()->getApp()->useDatabase);
+define("USE_LOG", ConfigurationManager::getInstance()->getApp()->useLog);
+define("DEBUG", ConfigurationManager::getInstance()->getApp()->debugMode);
 define("LOG_FILE_NAME", APP_NAME . ".log");
-define("DEBUG", false);
 
-/* --- CONFIGURATION END  --- */
+if (DEBUG) {
+  define("LOG_LEVEL", Monolog\Logger::DEBUG);
+} else {
+  define("LOG_LEVEL", Monolog\Logger::WARNING);
+}
 
 /* Global app object */
 $app = new \Slim\App();

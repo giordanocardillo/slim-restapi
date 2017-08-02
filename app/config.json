@@ -1,0 +1,37 @@
+{
+  "app": {
+    "name": "RestAPI",
+    "useDatabase": false,
+    "useLog": true,
+    "debugMode": true
+  },
+  "session": {
+    "expireMinutes": 60,
+    "JWTKeys": [
+      "94021803jl2k3j4289oijo3ij2p9jeo34i4j8"
+    ]
+  },
+  "databases": {
+    "db1": {
+      "driver": "mysql",
+      "host": "",
+      "dbName": "",
+      "username": "",
+      "password": ""
+    },
+    "db2": {
+      "driver": "mysql",
+      "host": "",
+      "dbName": "",
+      "username": "",
+      "password": ""
+    },
+    "db3": {
+      "driver": "mysql",
+      "host": "",
+      "dbName": "",
+      "username": "",
+      "password": ""
+    }
+  }
+}
