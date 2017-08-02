@@ -19,12 +19,12 @@ A RESTful API based on Slim Framework using exception driven coding.
 
 To configure the RestAPI there is a `config.json` file inside the `app` folder. It is self-explanatory.
 
-## How to get it running
+## How to use it 
 
-This project uses composer, so you can just clone it, then
+This project uses composer, so you can just issue
 
 ```bash
-composer install
+composer create-project giordanocardillo/slim-restapi
 ```
 
 And you're done!
