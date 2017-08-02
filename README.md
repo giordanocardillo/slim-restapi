@@ -24,7 +24,7 @@ To configure the RestAPI there is a `config.json` file inside the `app` folder. 
 This project uses composer, so you can just issue
 
 ```bash
-composer create-project giordanocardillo/slim-restapi
+composer create-project giordanocardillo/slim-restapi .
 ```
 
 And you're done!

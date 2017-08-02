@@ -10,12 +10,6 @@
       "homepage": "http://www.giordanocardillo.it"
     }
   ],
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/igorw/monolog"
-    }
-  ],
   "autoload": {
     "psr-4": {
       "RestAPI\\": "app/RestAPI"
