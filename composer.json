@@ -1,17 +1,30 @@
 {
+  "name": "giordanocardillo/slim-restapi",
+  "license": "MIT",
+  "description": "A simple Rest API using Slim Framework",
+  "authors": [
+    {
+      "name": "Giordano Cardillo",
+      "email": "giordano.cardillo@gmail.com",
+      "role": "Developer",
+      "homepage": "http://www.giordanocardillo.it"
+    }
+  ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/igorw/monolog"
+    }
+  ],
   "autoload": {
     "psr-4": {
       "RestAPI\\": "app/RestAPI"
     }
   },
   "require": {
+    "php": ">=5.5.0",
     "slim/slim": "^3.0",
     "monolog/monolog": "^1.23",
     "firebase/php-jwt": "^5.0"
-  },
-  "config": {
-    "platform": {
-      "php": "5.6.0"
-    }
   }
 }
