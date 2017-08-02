@@ -8,6 +8,6 @@ use Slim\Http\Response as SlimResponse;
 
 $app->get("/", function (SlimRequest $request, SlimResponse $response) {
 
-  $this->loggero->addInfo("Welcome to " . APP_NAME);
+  $this->logger->addInfo("Welcome to " . APP_NAME);
   return APIResponse::withSuccess($response, APP_NAME);
 });
