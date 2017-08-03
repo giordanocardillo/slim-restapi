@@ -21,10 +21,11 @@ define("IMAGES_DIR", __DIR__ . "/images");
 require __DIR__ . '/../vendor/autoload.php';
 
 /* Global Configuration */
-define("APP_NAME", ConfigurationManager::getInstance()->getApp()->name);
-define("USE_DB", ConfigurationManager::getInstance()->getApp()->useDatabase);
-define("USE_LOG", ConfigurationManager::getInstance()->getApp()->useLog);
-define("DEBUG", ConfigurationManager::getInstance()->getApp()->debugMode);
+$appConfiguration = ConfigurationManager::getInstance()->getApp();
+define("APP_NAME", $appConfiguration->name);
+define("USE_DB", $appConfiguration->useDatabase);
+define("USE_LOG", $appConfiguration->useLog);
+define("DEBUG", $appConfiguration->debugMode);
 define("LOG_FILE_NAME", APP_NAME . ".log");
 
 if (DEBUG) {
