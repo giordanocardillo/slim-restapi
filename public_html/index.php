@@ -17,6 +17,9 @@ define("LOGS_DIR", __DIR__ . '/../app/logs');
 define("PUBLIC_DIR", __DIR__);
 define("IMAGES_DIR", __DIR__ . "/images");
 
+/* Remove errors */
+ini_set("display_errors", "0");
+
 /* Include autoloader */
 require __DIR__ . '/../vendor/autoload.php';
 
