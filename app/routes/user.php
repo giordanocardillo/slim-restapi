@@ -1,13 +1,9 @@
 <?php
 
-use Firebase\JWT\ExpiredException;
-use RestAPI\Exceptions\InvalidTokenException;
 use RestAPI\Exceptions\UserAlreadyExistsException;
-use RestAPI\Exceptions\UserNotExistsException;
 use RestAPI\Utils\APIResponse;
 use RestAPI\Utils\HttpCodes;
 use RestAPI\Utils\Password;
-use RestAPI\Utils\SessionManager;
 use Slim\Http\Request as SlimRequest;
 use Slim\Http\Response as SlimResponse;
 
