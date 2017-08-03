@@ -8,6 +8,11 @@ use RestAPI\Exceptions\UnauthorizedException;
 
 class SessionManager {
 
+  public static function issueRefreshToken() {
+    $refreshToken = bin2hex(openssl_random_pseudo_bytes(48));
+    return hash("sha256", $refreshToken);
+  }
+
   public static function checkSession(SlimRequest $request) {
 
     $configuration = ConfigurationManager::getInstance()->getSession();
