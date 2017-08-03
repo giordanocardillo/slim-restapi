@@ -7,11 +7,6 @@ use RestAPI\Exceptions\ConfigurationNotExistsException;
 
 class DBLink extends PDO {
 
-  /**
-   * DBLink constructor.
-   * @param $dbName "The connection name"
-   * @throws ConfigurationNotExistsException
-   */
   public function __construct($dbName) {
 
     $databases = ConfigurationManager::getInstance()->getDatabases();
@@ -27,9 +22,6 @@ class DBLink extends PDO {
 
   }
 
-  /**
-   * @return PDO[]
-   */
   public static function connectAll() {
 
     $connections = [];

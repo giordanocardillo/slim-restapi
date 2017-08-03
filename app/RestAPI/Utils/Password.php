@@ -4,7 +4,7 @@ namespace RestAPI\Utils;
 
 use RestAPI\Exceptions\UnauthorizedException;
 
-class PasswordUtils {
+class Password {
 
   public static function generate($passwordLength = 12, $charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.-+=_,!@$#*%<>[]{}") {
     $password = "";
