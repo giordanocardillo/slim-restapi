@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS `refresh_tokens` (
   CONSTRAINT `refresh_token_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-.
+
 -- Dumping structure for table restapi.users
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
