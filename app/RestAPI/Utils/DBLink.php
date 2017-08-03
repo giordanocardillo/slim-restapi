@@ -22,6 +22,9 @@ class DBLink extends PDO {
 
   }
 
+  /**
+   * @return PDO[]
+   */
   public static function connectAll() {
 
     $connections = [];

@@ -1,7 +1,7 @@
 {
   "app": {
     "name": "RestAPI",
-    "useDatabase": false,
+    "useDatabase": true,
     "useLog": true,
     "debugMode": true
   },
@@ -14,24 +14,10 @@
   "databases": {
     "db1": {
       "driver": "mysql",
-      "host": "",
-      "dbName": "",
-      "username": "",
-      "password": ""
-    },
-    "db2": {
-      "driver": "mysql",
-      "host": "",
-      "dbName": "",
-      "username": "",
-      "password": ""
-    },
-    "db3": {
-      "driver": "mysql",
-      "host": "",
-      "dbName": "",
-      "username": "",
-      "password": ""
+      "host": "127.0.0.1",
+      "dbName": "restapi",
+      "username": "root",
+      "password": "root"
     }
   }
 }

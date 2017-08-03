@@ -50,8 +50,15 @@ $settings->replace([
 $c['logger'] = function ($c) {
   $logger = new \Monolog\Logger(APP_NAME);
   if (USE_LOG) {
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
+      $ip = $_SERVER['HTTP_CLIENT_IP'];
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+      $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    } else {
+      $ip = $_SERVER['REMOTE_ADDR'];
+    }
     $fileHandler = new \Monolog\Handler\RotatingFileHandler(LOGS_DIR . "/" . LOG_FILE_NAME, 2, LOG_LEVEL);
-    $fileHandler->setFormatter(new LineFormatter("[%datetime%] %channel%.%level_name%: %message% %context%\n"));
+    $fileHandler->setFormatter(new LineFormatter("[%datetime%] [$ip] %channel%.%level_name%: %message% %context%\n"));
     $logger->pushHandler($fileHandler);
   } else {
     $nullHandler = new \Monolog\Handler\NullHandler();
@@ -97,7 +104,7 @@ $c['notAllowedHandler'] = function ($c) {
 
 /* Database connection */
 if (USE_DB) {
-  $c['db'] = function ($c) {
+  $c['dbs'] = function ($c) {
     /** @var \Slim\Container $c */
     return DBLink::connectAll();
   };

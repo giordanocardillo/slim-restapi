@@ -2,6 +2,7 @@
 
 namespace RestAPI\Utils;
 
+use BadFunctionCallException;
 use Firebase\JWT\JWT;
 use Slim\Http\Request as SlimRequest;
 use RestAPI\Exceptions\UnauthorizedException;
@@ -13,30 +14,55 @@ class SessionManager {
     return hash("sha256", $refreshToken);
   }
 
-  public static function checkSession(SlimRequest $request) {
+  public static function checkSessionToken(SlimRequest $request) {
+
+    $authorizationHeader = self::getAuthorizationHeader($request);
 
     $configuration = ConfigurationManager::getInstance()->getSession();
 
-    if (!$request->hasHeader('Authorization')) {
-      throw new UnauthorizedException('No token provided');
-    }
+    $sessionToken = preg_replace('/^Bearer\\s/', '', $authorizationHeader);
 
-    $token = preg_replace('/^Bearer\\s/', '', $request->getHeader('Authorization')[0]);
-    return JWT::decode($token, $configuration->JWTKeys, array('HS256'));
+    return JWT::decode($sessionToken, $configuration->JWTKeys, array('HS256'));
   }
 
-  public static function issueToken($userID) {
+  private static function getAuthorizationHeader(SlimRequest $request) {
+
+    if (!$request->hasHeader('Authorization')) {
+      throw new BadFunctionCallException('Must provide Authorization header');
+    }
+
+    return $request->getHeader('Authorization')[0];
+  }
+
+  public static function getSessionPayload(SlimRequest $request) {
+    $authorizationHeader = self::getAuthorizationHeader($request);
+    $sessionToken = preg_replace('/^Bearer\\s/', '', $authorizationHeader);
+    $sessionPayload64 = explode('.', $sessionToken)[1];
+    $sessionPayload = JWT::jsonDecode(JWT::urlsafeB64Decode($sessionPayload64));
+    return $sessionPayload;
+  }
+
+  public static function issueSession($userID) {
+    $session = [];
     $configuration = ConfigurationManager::getInstance()->getSession();
+
+    $expiration = strtotime("+$configuration->expireMinutes minute");
+
     $kid = array_rand($configuration->JWTKeys);
-    return JWT::encode(
+    $session['token'] = JWT::encode(
       [
         'id' => $userID,
-        'exp' => strtotime("+$configuration->expireMinutes minute"),
+        'exp' => $expiration,
         'iss' => $_SERVER['HTTP_HOST'],
         'nbf' => time()
       ],
       $configuration->JWTKeys[$kid],
       'HS256',
       $kid);
+
+    $session['expires'] = $expiration;
+
+    return $session;
+
   }
 }

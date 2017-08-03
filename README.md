@@ -4,15 +4,16 @@ A RESTful API based on Slim Framework using exception driven coding.
 
 ## Directory Structure
 
-```
+```text
 +-- app                Contains app files
 |  +-- RestAPI         Contains core files
 |  |  +-- Exceptions   Contains custom exception classes
 |  |  +-- Utils        Contains utilities
-|  +-- routes          Contains the Slim routes (all files are included automatically)
+|  +-- routes          Contains the routes
 |  +-- config.json     Configuration file
 +-- public_html        Public web folder
 |  +-- index.php       Main slim page
++-- database.sql        The database structure file   
 ```
 
 ## How to configure it
@@ -27,5 +28,8 @@ This project uses composer, so you can just issue
 composer create-project giordanocardillo/slim-restapi .
 ```
 
-And you're done!
+Then import the DB using the provided `database.sql` file
 
+## User authentication workflow
+
+TODO
