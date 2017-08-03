@@ -3,6 +3,7 @@
 namespace RestAPI\Utils;
 
 use Exception;
+use ReflectionClass;
 use \Slim\Http\Response as SlimResponse;
 
 class APIResponse {
@@ -20,7 +21,8 @@ class APIResponse {
     }
 
     $data = [
-      "error" => $exception->getMessage()
+      "error" => $exception->getMessage(),
+      "errorClass" => (new ReflectionClass($exception))->getShortName()
     ];
 
     if ($status == HttpCodes::INTERNAL_SERVER_ERROR && (defined('DEBUG') && DEBUG)) {
