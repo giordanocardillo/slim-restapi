@@ -10,8 +10,8 @@ class APIResponse {
 
   public static function withError(SlimResponse $response, Exception $exception, $status = null, $debug = null) {
 
-    if (!self::isValidErrorCode($status)) {
-      if (self::isValidErrorCode($exception->getCode())) {
+    if (!HttpCodes::isValidErrorCode($status)) {
+      if (HttpCodes::isValidErrorCode($exception->getCode())) {
         $status = $exception->getCode();
       }
     }
@@ -37,42 +37,11 @@ class APIResponse {
 
   }
 
-  private static function isValidErrorCode($status) {
-
-    $valid = true;
-
-    switch ($status) {
-      case HttpCodes::BAD_REQUEST:
-        break;
-      case HttpCodes::UNATHORIZED:
-        break;
-      case HttpCodes::FORBIDDEN:
-        break;
-      case HttpCodes::NOT_FOUND:
-        break;
-      case HttpCodes::INTERNAL_SERVER_ERROR:
-        break;
-      case HttpCodes::METHOD_NOT_ALLOWED:
-        break;
-      default:
-        $valid = false;
-        break;
-    }
-
-    return $valid;
-
-  }
-
   public static function withSuccess(SlimResponse $response, $data = "success", $status = HttpCodes::OK) {
 
-    switch ($status) {
-      case HttpCodes::OK:
-        break;
-      case HttpCodes::PARTIAL_CONTENT:
-        break;
-      default:
-        $status = HttpCodes::OK;
-        break;
+
+    if (!HttpCodes::isValidSuccessCode($status)) {
+      $status = $status = HttpCodes::OK;
     }
 
     return $response->withJson(["data" => $data], $status);
@@ -92,11 +61,12 @@ class APIResponse {
         $val = (array)$val;
       }
 
-      if (!is_array($val)) {
-        $camelCaseArray[$newKey] = $val;
-      } else {
+      $camelCaseArray[$newKey] = $val;
+
+      if (is_array($val)) {
         $camelCaseArray[$newKey] = self::camelCaseKeys($val, $camelCaseArray[$newKey]);
       }
+      
     }
     return $camelCaseArray;
   }

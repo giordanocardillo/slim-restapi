@@ -22,7 +22,9 @@ class SessionManager {
 
     $sessionToken = preg_replace('/^Bearer\\s/', '', $authorizationHeader);
 
-    return JWT::decode($sessionToken, $configuration->JWTKeys, array('HS256'));
+    $sessionTokenPayload = JWT::decode($sessionToken, $configuration->JWTKeys, array('HS256'));
+
+    return $sessionTokenPayload;
   }
 
   private static function getAuthorizationHeader(SlimRequest $request) {
@@ -32,14 +34,6 @@ class SessionManager {
     }
 
     return $request->getHeader('Authorization')[0];
-  }
-
-  public static function getSessionPayload(SlimRequest $request) {
-    $authorizationHeader = self::getAuthorizationHeader($request);
-    $sessionToken = preg_replace('/^Bearer\\s/', '', $authorizationHeader);
-    $sessionPayload64 = explode('.', $sessionToken)[1];
-    $sessionPayload = JWT::jsonDecode(JWT::urlsafeB64Decode($sessionPayload64));
-    return $sessionPayload;
   }
 
   public static function issueSession($userID) {
@@ -53,7 +47,7 @@ class SessionManager {
       [
         'id' => $userID,
         'exp' => $expiration,
-        'iss' => $_SERVER['HTTP_HOST'],
+        'iss' => $configuration->issuer,
         'nbf' => time()
       ],
       $configuration->JWTKeys[$kid],
