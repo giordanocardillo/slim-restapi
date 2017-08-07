@@ -17,7 +17,9 @@ abstract class HttpCodes {
 
     $reflect = new \ReflectionClass(__CLASS__);
 
-    $validCodes = array_filter($reflect->getConstants(), "self::isErrorCode");
+    $validCodes = array_filter($reflect->getConstants(), function ($code) {
+      return $code >= 400;
+    });
 
     return in_array($statusCode, $validCodes);
 
@@ -27,17 +29,12 @@ abstract class HttpCodes {
 
     $reflect = new \ReflectionClass(__CLASS__);
 
-    $validCodes = array_filter($reflect->getConstants(), "self::isSuccessCode");
+    $validCodes = array_filter($reflect->getConstants(), function ($code) {
+      return ($code < 300 && $code >= 200);
+    });
 
     return in_array($statusCode, $validCodes);
 
   }
 
-  private static function isErrorCode($statusCode) {
-    return $statusCode >= 400;
-  }
-
-  private static function isSuccessCode($statusCode) {
-    return ($statusCode < 300 && $statusCode >= 200);
-  }
 }

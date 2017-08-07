@@ -10,8 +10,11 @@ class APIResponse {
 
   public static function withError(SlimResponse $response, Exception $exception, $status = null, $debug = null) {
 
-    if (!HttpCodes::isValidErrorCode($status)) {
-      if (HttpCodes::isValidErrorCode($exception->getCode())) {
+    $isValidErrorCode = HttpCodes::isValidErrorCode($status);
+
+    if (!$isValidErrorCode) {
+      $isValidErrorCode = HttpCodes::isValidErrorCode($exception->getCode());
+      if ($isValidErrorCode) {
         $status = $exception->getCode();
       }
     }
@@ -39,8 +42,9 @@ class APIResponse {
 
   public static function withSuccess(SlimResponse $response, $data = "success", $status = HttpCodes::OK) {
 
+    $isValidSuccessCode = HttpCodes::isValidSuccessCode($status);
 
-    if (!HttpCodes::isValidSuccessCode($status)) {
+    if (!$isValidSuccessCode) {
       $status = $status = HttpCodes::OK;
     }
 
@@ -66,7 +70,7 @@ class APIResponse {
       if (is_array($val)) {
         $camelCaseArray[$newKey] = self::camelCaseKeys($val, $camelCaseArray[$newKey]);
       }
-      
+
     }
     return $camelCaseArray;
   }
