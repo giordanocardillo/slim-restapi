@@ -11,16 +11,10 @@ use \Slim\Http\Response as SlimResponse;
  */
 class APIResponse {
 
-  public static function withError(SlimResponse $response, Exception $exception, $status = null, $debug = null) {
+  public static function withError(SlimResponse $response, Exception $exception, $status = HttpCodes::INTERNAL_SERVER_ERROR, $debug = null) {
 
-    if (!HttpCodes::isValidErrorCode($status)) {
-      if (HttpCodes::isValidErrorCode($exception->getCode())) {
-        $status = $exception->getCode();
-      }
-    }
-
-    if ($status == null) {
-      $status = HttpCodes::INTERNAL_SERVER_ERROR;
+    if (!HttpCodes::isValidErrorCode($status) && HttpCodes::isValidErrorCode($exception->getCode())) {
+      $status = $exception->getCode();
     }
 
     $data = [
