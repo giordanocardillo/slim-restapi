@@ -6,6 +6,9 @@ use Exception;
 use ReflectionClass;
 use \Slim\Http\Response as SlimResponse;
 
+/**
+ * @SuppressWarnings(PHPMD)
+ */
 class APIResponse {
 
   public static function withError(SlimResponse $response, Exception $exception, $status = null, $debug = null) {
