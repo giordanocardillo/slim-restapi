@@ -11,10 +11,18 @@ use \Slim\Http\Response as SlimResponse;
  */
 class APIResponse {
 
-  public static function withError(SlimResponse $response, Exception $exception, $status = HttpCodes::INTERNAL_SERVER_ERROR, $debug = null) {
+  public static function withError(SlimResponse $response, Exception $exception, $status = null, $debug = null) {
 
-    if (!HttpCodes::isValidErrorCode($status) && HttpCodes::isValidErrorCode($exception->getCode())) {
-      $status = $exception->getCode();
+    if (!HttpCodes::isValidErrorCode($status)) {
+      $status = null;
+
+      if (HttpCodes::isValidErrorCode($exception->getCode())) {
+        $status = $exception->getCode();
+      }
+    }
+
+    if ($status == null) {
+      $status = HttpCodes::INTERNAL_SERVER_ERROR;
     }
 
     $data = [
@@ -22,11 +30,11 @@ class APIResponse {
       "errorClass" => (new ReflectionClass($exception))->getShortName()
     ];
 
-    if ($status == HttpCodes::INTERNAL_SERVER_ERROR && (defined('DEBUG') && DEBUG)) {
+    if ($status == HttpCodes::INTERNAL_SERVER_ERROR && ConfigurationManager::getInstance()->isDebug()) {
       $data['trace'] = $exception->getTraceAsString();
     }
 
-    if (isset($debug) && (defined('DEBUG') && DEBUG)) {
+    if (isset($debug) && ConfigurationManager::getInstance()->isDebug()) {
       $data['debug'] = var_export($debug, true);
     }
 

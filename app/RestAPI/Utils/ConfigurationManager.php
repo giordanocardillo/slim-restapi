@@ -64,4 +64,8 @@ class ConfigurationManager {
     return $this->configuration->app;
   }
 
+  public function isDebug() {
+    return $this->configuration->app->debugMode;
+  }
+
 }
