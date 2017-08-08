@@ -22,9 +22,7 @@ class SessionManager {
 
     $sessionToken = preg_replace('/^Bearer\\s/', '', $authorizationHeader);
 
-    $sessionTokenPayload = JWT::decode($sessionToken, $configuration->JWTKeys, array('HS256'));
-
-    return $sessionTokenPayload;
+    return JWT::decode($sessionToken, $configuration->JWTKeys, array('HS256'));
   }
 
   private static function getAuthorizationHeader(SlimRequest $request) {
@@ -43,6 +41,7 @@ class SessionManager {
     $expiration = strtotime("+$configuration->expireMinutes minute");
 
     $kid = array_rand($configuration->JWTKeys);
+
     $session['token'] = JWT::encode(
       [
         'id' => $userID,

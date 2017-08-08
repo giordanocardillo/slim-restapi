@@ -10,11 +10,9 @@ class APIResponse {
 
   public static function withError(SlimResponse $response, Exception $exception, $status = null, $debug = null) {
 
-    $isValidErrorCode = HttpCodes::isValidErrorCode($status);
 
-    if (!$isValidErrorCode) {
-      $isValidErrorCode = HttpCodes::isValidErrorCode($exception->getCode());
-      if ($isValidErrorCode) {
+    if (!HttpCodes::isValidErrorCode($status)) {
+      if (HttpCodes::isValidErrorCode($exception->getCode())) {
         $status = $exception->getCode();
       }
     }
@@ -42,9 +40,7 @@ class APIResponse {
 
   public static function withSuccess(SlimResponse $response, $data = "success", $status = HttpCodes::OK) {
 
-    $isValidSuccessCode = HttpCodes::isValidSuccessCode($status);
-
-    if (!$isValidSuccessCode) {
+    if (!HttpCodes::isValidSuccessCode($status)) {
       $status = $status = HttpCodes::OK;
     }
 
