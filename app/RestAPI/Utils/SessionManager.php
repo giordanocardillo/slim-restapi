@@ -7,6 +7,9 @@ use Firebase\JWT\JWT;
 use Slim\Http\Request as SlimRequest;
 use RestAPI\Exceptions\UnauthorizedException;
 
+/**
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ */
 class SessionManager {
 
   public static function issueRefreshToken() {

@@ -7,12 +7,11 @@ use ReflectionClass;
 use \Slim\Http\Response as SlimResponse;
 
 /**
- * @SuppressWarnings(PHPMD)
+ * @SuppressWarnings(PHPMD.StaticAccess)
  */
 class APIResponse {
 
   public static function withError(SlimResponse $response, Exception $exception, $status = null, $debug = null) {
-
 
     if (!HttpCodes::isValidErrorCode($status)) {
       if (HttpCodes::isValidErrorCode($exception->getCode())) {

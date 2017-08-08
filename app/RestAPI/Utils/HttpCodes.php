@@ -2,9 +2,7 @@
 
 namespace RestAPI\Utils;
 
-/**
- * @SuppressWarnings(PHPMD)
- */
+
 abstract class HttpCodes {
   const OK = 200;
   const PARTIAL_CONTENT = 206;
