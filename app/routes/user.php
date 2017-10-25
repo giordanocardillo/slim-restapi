@@ -47,13 +47,13 @@ $app->post('/user', function (SlimRequest $request, SlimResponse $response) {
 
     return APIResponse::withSuccess($response, $data);
   } catch (PDOException $e) {
-    return APIResponse::witherror($response, $e, HttpCodes::INTERNAL_SERVER_ERROR);
+    return APIResponse::withError($response, $e, HttpCodes::INTERNAL_SERVER_ERROR);
   } catch (UserAlreadyExistsException $e) {
-    return APIResponse::witherror($response, $e, HttpCodes::BAD_REQUEST);
+    return APIResponse::withError($response, $e, HttpCodes::BAD_REQUEST);
   } catch (BadFunctionCallException $e) {
-    return APIResponse::witherror($response, $e, HttpCodes::BAD_REQUEST);
+    return APIResponse::withError($response, $e, HttpCodes::BAD_REQUEST);
   } catch (Exception $e) {
-    return APIResponse::witherror($response, $e, HttpCodes::INTERNAL_SERVER_ERROR);
+    return APIResponse::withError($response, $e, HttpCodes::INTERNAL_SERVER_ERROR);
   }
 
 });

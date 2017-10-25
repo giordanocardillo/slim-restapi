@@ -22,9 +22,9 @@ $app->get('/session/check', function (SlimRequest $request, SlimResponse $respon
     return APIResponse::withSuccess($response, $data);
 
   } catch (BadFunctionCallException $e) {
-    return APIResponse::witherror($response, $e, HttpCodes::BAD_REQUEST);
+    return APIResponse::withError($response, $e, HttpCodes::BAD_REQUEST);
   } catch (Exception $e) {
-    return APIResponse::witherror($response, $e, HttpCodes::UNATHORIZED);
+    return APIResponse::withError($response, $e, HttpCodes::UNATHORIZED);
   }
 });
 
@@ -87,13 +87,13 @@ $app->post('/session/refresh', function (SlimRequest $request, SlimResponse $res
     if ($db->inTransaction()) {
       $db->rollBack();
     }
-    return APIResponse::witherror($response, $e, HttpCodes::INTERNAL_SERVER_ERROR);
+    return APIResponse::withError($response, $e, HttpCodes::INTERNAL_SERVER_ERROR);
   } catch (InvalidTokenException $e) {
-    return APIResponse::witherror($response, $e, HttpCodes::FORBIDDEN);
+    return APIResponse::withError($response, $e, HttpCodes::FORBIDDEN);
   } catch (BadFunctionCallException $e) {
-    return APIResponse::witherror($response, $e, HttpCodes::BAD_REQUEST);
+    return APIResponse::withError($response, $e, HttpCodes::BAD_REQUEST);
   } catch (Exception $e) {
-    return APIResponse::witherror($response, $e, HttpCodes::UNATHORIZED);
+    return APIResponse::withError($response, $e, HttpCodes::UNATHORIZED);
   }
 });
 
@@ -150,11 +150,11 @@ $app->post('/session/login', function (SlimRequest $request, SlimResponse $respo
     return APIResponse::withSuccess($response, $data);
 
   } catch (UserNotExistsException $e) {
-    return APIResponse::witherror($response, $e, HttpCodes::NOT_FOUND);
+    return APIResponse::withError($response, $e, HttpCodes::NOT_FOUND);
   } catch (BadFunctionCallException $e) {
-    return APIResponse::witherror($response, $e, HttpCodes::BAD_REQUEST);
+    return APIResponse::withError($response, $e, HttpCodes::BAD_REQUEST);
   } catch (Exception $e) {
-    return APIResponse::witherror($response, $e, HttpCodes::UNATHORIZED);
+    return APIResponse::withError($response, $e, HttpCodes::UNATHORIZED);
   }
 });
 
