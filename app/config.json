@@ -6,6 +6,7 @@
     "debugMode": true
   },
   "session": {
+    "issuer": "RestAPI Server",
     "expireMinutes": 60,
     "JWTKeys": [
       "94021803jl2k3j4289oijo3ij2p9jeo34i4j8"

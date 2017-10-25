@@ -7,6 +7,9 @@ use Firebase\JWT\JWT;
 use Slim\Http\Request as SlimRequest;
 use RestAPI\Exceptions\UnauthorizedException;
 
+/**
+ * @SuppressWarnings(PHPMD.StaticAccess)
+ */
 class SessionManager {
 
   public static function issueRefreshToken() {
@@ -34,14 +37,6 @@ class SessionManager {
     return $request->getHeader('Authorization')[0];
   }
 
-  public static function getSessionPayload(SlimRequest $request) {
-    $authorizationHeader = self::getAuthorizationHeader($request);
-    $sessionToken = preg_replace('/^Bearer\\s/', '', $authorizationHeader);
-    $sessionPayload64 = explode('.', $sessionToken)[1];
-    $sessionPayload = JWT::jsonDecode(JWT::urlsafeB64Decode($sessionPayload64));
-    return $sessionPayload;
-  }
-
   public static function issueSession($userID) {
     $session = [];
     $configuration = ConfigurationManager::getInstance()->getSession();
@@ -49,11 +44,12 @@ class SessionManager {
     $expiration = strtotime("+$configuration->expireMinutes minute");
 
     $kid = array_rand($configuration->JWTKeys);
+
     $session['token'] = JWT::encode(
       [
         'id' => $userID,
         'exp' => $expiration,
-        'iss' => $_SERVER['HTTP_HOST'],
+        'iss' => $configuration->issuer,
         'nbf' => time()
       ],
       $configuration->JWTKeys[$kid],

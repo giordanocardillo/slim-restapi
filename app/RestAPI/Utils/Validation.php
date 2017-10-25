@@ -47,13 +47,13 @@ class Validation {
 
   }
 
-  public static function isValidImageFile($file_name, $allowed_types = array("image/png", "image/gif", "image/jpeg")) {
+  public static function isValidImageFile($fileName, $allowedTypes = array("image/png", "image/gif", "image/jpeg")) {
 
     $finfo = finfo_open(FILEINFO_MIME_TYPE);
-    $file_type = finfo_file($finfo, $file_name);
+    $fileType = finfo_file($finfo, $fileName);
     finfo_close($finfo);
 
-    if (!in_array($file_type, $allowed_types)) {
+    if (!in_array($fileType, $allowedTypes)) {
       throw new InvalidFileException("File type not allowed");
 
     }

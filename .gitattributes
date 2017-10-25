@@ -3,3 +3,4 @@
 .editorconfig export-ignore
 contributors.txt export-ignore
 .gitkeep export-ignore
+.codeclimate.yml export-ignore

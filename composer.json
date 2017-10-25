@@ -20,5 +20,8 @@
     "slim/slim": "^3.0",
     "monolog/monolog": "^1.23",
     "firebase/php-jwt": "^5.0"
+  },
+  "require-dev": {
+    "phpmd/phpmd": "^2.6"
   }
 }

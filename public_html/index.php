@@ -61,7 +61,7 @@ $c['logger'] = function ($c) {
       $ip = $_SERVER['REMOTE_ADDR'];
     }
     $fileHandler = new \Monolog\Handler\RotatingFileHandler(LOGS_DIR . "/" . LOG_FILE_NAME, 2, LOG_LEVEL);
-    $fileHandler->setFormatter(new LineFormatter("[%datetime%] [$ip] %channel%.%level_name%: %message% %context%\n"));
+    $fileHandler->setFormatter(new LineFormatter("[%datetime%] [$ip] %level_name%: %message% %context%\n"));
     $logger->pushHandler($fileHandler);
   } else {
     $nullHandler = new \Monolog\Handler\NullHandler();
