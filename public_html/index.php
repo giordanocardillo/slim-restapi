@@ -5,7 +5,7 @@ use RestAPI\Exceptions\APINotFoundException;
 use RestAPI\Exceptions\MethodNotAllowedException;
 use RestAPI\Utils\APIResponse;
 use RestAPI\Utils\ConfigurationManager;
-use RestAPI\Utils\DBLink;
+use RestAPI\Utils\DBProvider;
 use RestAPI\Utils\HttpCodes;
 use Slim\Http\Request as SlimRequest;
 use Slim\Http\Response as SlimResponse;
@@ -107,9 +107,8 @@ $c['notAllowedHandler'] = function ($c) {
 
 /* Database connection */
 if (USE_DB) {
-  $c['dbs'] = function ($c) {
-    /** @var \Slim\Container $c */
-    return DBLink::connectAll();
+  $c['dbProvider'] = function ($c) {
+    return new DBProvider();
   };
 }
 

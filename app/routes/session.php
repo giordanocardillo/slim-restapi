@@ -34,7 +34,7 @@ $app->post('/session/refresh', function (SlimRequest $request, SlimResponse $res
   // This variable is made for IDE hinting.
   // Embedding db in Slim container makes IDE lose track of the variable type
   /** @var PDO $db */
-  $db = $this->dbs['db1'];
+  $db = $this->dbProvider->get('db1');
 
   try {
 
@@ -103,7 +103,7 @@ $app->post('/session/login', function (SlimRequest $request, SlimResponse $respo
   // This variable is made for IDE hinting.
   // Embedding db in Slim container makes IDE lose track of the variable type
   /** @var PDO $db */
-  $db = $this->dbs['db1'];
+  $db = $this->dbProvider->get('db1');
 
   try {
     $queryParams = $request->getQueryParams();
