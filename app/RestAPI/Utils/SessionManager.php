@@ -17,6 +17,9 @@ class SessionManager {
     return hash("sha256", $refreshToken);
   }
 
+  /**
+   * @throws \RestAPI\Exceptions\ConfigurationNotExistsException
+   */
   public static function checkSessionToken(SlimRequest $request) {
 
     $authorizationHeader = self::getAuthorizationHeader($request);
@@ -37,6 +40,9 @@ class SessionManager {
     return $request->getHeader('Authorization')[0];
   }
 
+  /**
+   * @throws \RestAPI\Exceptions\ConfigurationNotExistsException
+   */
   public static function issueSession($userID) {
     $session = [];
     $configuration = ConfigurationManager::getInstance()->getSession();

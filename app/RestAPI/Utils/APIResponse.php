@@ -6,9 +6,6 @@ use Exception;
 use ReflectionClass;
 use \Slim\Http\Response as SlimResponse;
 
-/**
- * @SuppressWarnings(PHPMD.StaticAccess)
- */
 class APIResponse {
 
   public static function withError(SlimResponse $response, Exception $exception, $status = null, $debug = null) {
@@ -27,7 +24,7 @@ class APIResponse {
 
     $data = [
       "error" => $exception->getMessage(),
-      "errorClass" => (new ReflectionClass($exception))->getShortName()
+      "errorClass" => get_class($exception)
     ];
 
     if ($status == HttpCodes::INTERNAL_SERVER_ERROR && ConfigurationManager::getInstance()->isDebug()) {

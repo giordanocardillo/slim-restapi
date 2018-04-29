@@ -9,10 +9,16 @@ class DBProvider {
 
   private $databases;
 
+  /**
+   * @throws ConfigurationNotExistsException
+   */
   public function __construct() {
     $this->databases = ConfigurationManager::getInstance()->getDatabases();
   }
 
+  /**
+   * @throws ConfigurationNotExistsException
+   */
   public function get($dbName) {
     if (!isset($this->databases->{$dbName})) {
       throw new ConfigurationNotExistsException("Configuration for $dbName does not exist");

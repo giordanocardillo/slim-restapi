@@ -6,6 +6,9 @@ use RestAPI\Exceptions\FormatException;
 use RestAPI\Exceptions\InvalidFileException;
 
 class Validation {
+  /**
+   * @throws FormatException
+   */
   public static function isValidEmailAddress($email) {
 
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -13,6 +16,9 @@ class Validation {
     }
   }
 
+  /**
+   * @throws FormatException
+   */
   public static function isValidGender($gender) {
 
     if ($gender != "male" and $gender != "female") {
@@ -20,6 +26,9 @@ class Validation {
     }
   }
 
+  /**
+   * @throws FormatException
+   */
   public static function isValidHumanName($name) {
 
     self::isValidString($name);
@@ -30,6 +39,9 @@ class Validation {
 
   }
 
+  /**
+   * @throws FormatException
+   */
   public static function isValidString($string, $min = 1, $max = 200) {
 
     if (empty($string) or strlen($string) <= $min or strlen($string) >= $max) {
@@ -37,6 +49,9 @@ class Validation {
     }
   }
 
+  /**
+   * @throws FormatException
+   */
   public static function isValidUsername($username) {
 
     self::isValidString($username);
@@ -47,6 +62,9 @@ class Validation {
 
   }
 
+  /**
+   * @throws InvalidFileException
+   */
   public static function isValidImageFile($fileName, $allowedTypes = array("image/png", "image/gif", "image/jpeg")) {
 
     $finfo = finfo_open(FILEINFO_MIME_TYPE);
@@ -59,6 +77,9 @@ class Validation {
     }
   }
 
+  /**
+   * @throws FormatException
+   */
   public static function isValidDate($date) {
     $time = strtotime(str_replace('/', '-', $date));
     if ($time == false) {

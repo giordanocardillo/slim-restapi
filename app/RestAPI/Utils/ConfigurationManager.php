@@ -9,6 +9,9 @@ class ConfigurationManager {
 
   private $configuration;
 
+  /**
+   * @throws ConfigurationNotExistsException
+   */
   private function __construct() {
     if (!file_exists(APP_DIR . "/config.json")) {
       throw new ConfigurationNotExistsException("Configuration file does not exist");
@@ -24,6 +27,9 @@ class ConfigurationManager {
 
   }
 
+  /**
+   * @throws ConfigurationNotExistsException
+   */
   public static function getInstance() {
     static $instance = null;
     if ($instance == null) {
@@ -33,6 +39,9 @@ class ConfigurationManager {
     return $instance;
   }
 
+  /**
+   * @throws ConfigurationNotExistsException
+   */
   public function getSession() {
 
 
@@ -51,6 +60,9 @@ class ConfigurationManager {
     return $this->configuration->session;
   }
 
+  /**
+   * @throws ConfigurationNotExistsException
+   */
   public function getDatabases() {
 
     if (!isset($this->configuration->databases)) {
