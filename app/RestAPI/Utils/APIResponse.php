@@ -10,15 +10,11 @@ class APIResponse {
 
   public static function withError(SlimResponse $response, Exception $exception, $status = null, $debug = null) {
 
-    if (!HttpCodes::isValidErrorCode($status)) {
-      $status = null;
-
-      if (HttpCodes::isValidErrorCode($exception->getCode())) {
-        $status = $exception->getCode();
-      }
+    if (HttpCodes::isValidErrorCode($exception->getCode())) {
+      $status = $exception->getCode();
     }
 
-    if ($status == null) {
+    if ($status == null or !HttpCodes::isValidErrorCode($status)) {
       $status = HttpCodes::INTERNAL_SERVER_ERROR;
     }
 
