@@ -3,18 +3,18 @@
 namespace RestAPI\Utils;
 
 use Exception;
-use ReflectionClass;
 use \Slim\Http\Response as SlimResponse;
 
 class APIResponse {
 
   public static function withError(SlimResponse $response, Exception $exception, $status = null, $debug = null) {
 
+
     if (HttpCodes::isValidErrorCode($exception->getCode())) {
       $status = $exception->getCode();
     }
 
-    if ($status == null or !HttpCodes::isValidErrorCode($status)) {
+    if (!HttpCodes::isValidErrorCode($status)) {
       $status = HttpCodes::INTERNAL_SERVER_ERROR;
     }
 
